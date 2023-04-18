@@ -61,7 +61,7 @@ class Title(models.Model):
         validators=[validate_correct_year]
     )
     description = models.TextField(
-        verbose_name='Описание произведения',blank=True, null=True
+        verbose_name='Описание произведения', blank=True, null=True
     )
     genre = models.ManyToManyField(
         Genre,

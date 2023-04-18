@@ -12,59 +12,39 @@
 
 Отзыв может быть прокомментирован (Сomment) пользователями.
 
-### Как запустить проект:
+### Запуск проекта
 
-Клонируй репозиторий и перейди в него в командной строке:
+Заполнить infra/.env по шаблону:
 
-`git clone <link>`
-`cd api_yamdb`
+    DB_ENGINE=django.db.backends.postgresql
+    DB_NAME=postgres
+    POSTGRES_USER=postgres
+    POSTGRES_PASSWORD=postgres
+    DB_HOST=db
+    DB_PORT=5432
 
-Cоздай и активируй виртуальное окружение:
+Сборка и запуск контейнеров:
 
-`python -m venv venv`
+    cd infra
+    docker-compose up
 
-* Если у тебя Linux/macOS
+Миграции:
 
-    ```
-    source venv/bin/activate
-    ```
+    docker-compose exec web python manage.py migrate
 
-* Если у тебя windows
+Заполенение проекта тестовыми данными:
 
-    ```
-    source env/scripts/activate
-    ```
+    docker-compose exec web python manage.py db_import
 
-Установи зависимости из файла requirements.txt:
+Создание суперпользователя:
 
-`python -m pip install --upgrade pip`
-`pip install -r requirements.txt`
+    docker-compose exec web python manage.py createsuperuser
 
-Выполни миграции:
+Сборка стат. файлов:
 
-`cd api_yamdb`
-`python3 manage.py migrate`
+    docker-compose exec web python manage.py collectstatic --no-input
 
-Создай суперпользователя (для раздачи прав админам):
-
-`python manage.py createsuperuser`
-
-Запусти проект:
-
-`python manage.py runserver`
-
-Сам проект и админ-панель искать по адресам:
-
-http://127.0.0.1:8000
-
-http://127.0.0.1:8000/admin
-
-Наборы тестовых данных:
-
-`pip install pandas`
-
-`python3 manage.py db_import.py`
-
+После этого можно перейти на http://127.0.0.1:80/
 
 ### Над проектом работали:
 

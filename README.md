@@ -44,7 +44,7 @@
 
     docker-compose exec web python manage.py collectstatic --no-input
 
-После этого можно перейти на http://127.0.0.1:80/
+После этого можно перейти на http://127.0.0.1:80/admin/
 
 ### Над проектом работали:
 

@@ -1,11 +1,10 @@
-# версия docker-compose
 version: '3.8'
 
 services:
   db:
     image: postgres:13.0-alpine
     volumes:
-      - /var/lib/postgresql/data/
+      - psqldata:/var/lib/postgresql/data/
     env_file:
       - ./.env
   web:
@@ -36,3 +35,4 @@ services:
 volumes:
   static_value:
   media_value:
+  psqldata:

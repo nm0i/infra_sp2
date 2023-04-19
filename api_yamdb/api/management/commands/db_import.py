@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import pandas as pd
 from sqlalchemy import create_engine
@@ -8,9 +8,10 @@ from sqlalchemy.engine import URL
 from api_yamdb.settings import BASE_DIR, DATABASES
 from django.core.management.base import BaseCommand
 
+DEMOPATH: str = "data"
+
 
 class Command(BaseCommand):
-
     def handle(self, *args, **kwargs):
         url = URL.create(
             drivername="postgresql",
@@ -25,13 +26,13 @@ class Command(BaseCommand):
         FILE_TABLE_PAIRS: List = map(
             lambda x: (os.path.join(BASE_DIR, x[0]), x[1]),
             (
-                ("data/titles.csv", "reviews_title"),
-                ("data/users.csv", "users_user"),
-                ("data/review.csv", "reviews_review"),
-                ("data/category.csv", "reviews_category"),
-                ("data/comments.csv", "reviews_comment"),
-                ("data/genre_title.csv", "reviews_genretitle"),
-                ("data/genre.csv", "reviews_genre"),
+                (DEMOPATH + "/titles.csv", "reviews_title"),
+                (DEMOPATH + "/users.csv", "users_user"),
+                (DEMOPATH + "/review.csv", "reviews_review"),
+                (DEMOPATH + "/category.csv", "reviews_category"),
+                (DEMOPATH + "/comments.csv", "reviews_comment"),
+                (DEMOPATH + "/genre_title.csv", "reviews_titlegenre"),
+                (DEMOPATH + "/genre.csv", "reviews_genre"),
             ),
         )
         COLUMN_RENAME_MAP: Dict[str, str] = {
@@ -45,11 +46,12 @@ class Command(BaseCommand):
             "is_staff": False,
             "is_active": True,
             "confirmation_code": 0,
-            "date_joined": pd.to_datetime(0, unit='s'),
+            "date_joined": pd.to_datetime(0, unit="s"),
             "first_name": "null",
             "last_name": "null",
             "bio": "null",
         }
+        DATE_TABLES: Tuple[str] = ("reviews_review", "reviews_comment")
 
         for csv_file, table in FILE_TABLE_PAIRS:
             try:
@@ -67,10 +69,11 @@ class Command(BaseCommand):
                     frame_new = frame.assign(**USERS_DEF_RECORD)
                 else:
                     frame_new = frame
-                frame_new.to_sql(table,
-                                 connection,
-                                 if_exists="append",
-                                 index=False)
+                if table in DATE_TABLES:
+                    frame_new["pub_date"] = pd.to_datetime(frame["pub_date"])
+                frame_new.to_sql(
+                    table, connection, if_exists="append", index=False
+                )
                 print(f"OK: {csv_file}")
             except Exception as error:
                 print(f"ERROR: {error}")

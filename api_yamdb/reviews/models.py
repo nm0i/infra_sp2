@@ -84,6 +84,7 @@ class Title(models.Model):
     def __str__(self):
         return self.name
 
+
 class Review(models.Model):
     title = models.ForeignKey(
         Title,

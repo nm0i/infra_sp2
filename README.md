@@ -162,8 +162,7 @@
     }
 
 Полное описание api доступно в static/redoc.yml или по
-[http://127.0.0.1/redoc/#section/Algoritm-registracii-polzovatelej](ссылке)
-после запуска проекта.
+[ссылке](http://127.0.0.1/redoc/) после запуска проекта.
 
 ### Над проектом работали:
 
